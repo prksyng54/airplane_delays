@@ -28,5 +28,15 @@
     "crumbs": [
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Data</span>"
     ]
+  },
+  {
+    "objectID": "results.html",
+    "href": "results.html",
+    "title": "3  Results",
+    "section": "",
+    "text": "3.1 Q1. How do delay patterns vary across U.S. airports and states, and how are these patterns associated with geography, dominant delay types, and airport traffic volume?\nCode\nlibrary(tidyverse)\nlibrary(GGally)\nlibrary(janitor)\nlibrary(statebins)\nlibrary(ggplot2)\n\ndf &lt;- read_csv(\"Airline_Delay_Cause.csv\")\ndf\n\n\n# A tibble: 24,599 × 21\n    year month carrier carrier_name   airport airport_name arr_flights arr_del15\n   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;          &lt;chr&gt;   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;\n 1  2025     7 YV      Mesa Airlines… BWI     Baltimore, …          18         2\n 2  2025     7 YV      Mesa Airlines… CHS     Charleston,…          48        16\n 3  2025     7 YV      Mesa Airlines… CLE     Cleveland, …          65        10\n 4  2025     7 YV      Mesa Airlines… CLT     Charlotte, …         134        31\n 5  2025     7 YV      Mesa Airlines… CMH     Columbus, O…          61        12\n 6  2025     7 YV      Mesa Airlines… COS     Colorado Sp…          31         5\n 7  2025     7 YV      Mesa Airlines… CRP     Corpus Chri…          19         4\n 8  2025     7 YV      Mesa Airlines… CVG     Cincinnati,…          75        14\n 9  2025     7 YV      Mesa Airlines… DFW     Dallas/Fort…          97        23\n10  2025     7 YV      Mesa Airlines… DRO     Durango, CO…          31         1\n# ℹ 24,589 more rows\n# ℹ 13 more variables: carrier_ct &lt;dbl&gt;, weather_ct &lt;dbl&gt;, nas_ct &lt;dbl&gt;,\n#   security_ct &lt;dbl&gt;, late_aircraft_ct &lt;dbl&gt;, arr_cancelled &lt;dbl&gt;,\n#   arr_diverted &lt;dbl&gt;, arr_delay &lt;dbl&gt;, carrier_delay &lt;dbl&gt;,\n#   weather_delay &lt;dbl&gt;, nas_delay &lt;dbl&gt;, security_delay &lt;dbl&gt;,\n#   late_aircraft_delay &lt;dbl&gt;",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Results</span>"
+    ]
   }
 ]

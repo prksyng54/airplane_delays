@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -140,8 +175,14 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#q1.-how-do-delay-patterns-vary-across-u.s.-airports-and-states-and-how-are-these-patterns-associated-with-geography-dominant-delay-types-and-airport-traffic-volume" id="toc-q1.-how-do-delay-patterns-vary-across-u.s.-airports-and-states-and-how-are-these-patterns-associated-with-geography-dominant-delay-types-and-airport-traffic-volume" class="nav-link active" data-scroll-target="#q1.-how-do-delay-patterns-vary-across-u.s.-airports-and-states-and-how-are-these-patterns-associated-with-geography-dominant-delay-types-and-airport-traffic-volume"><span class="header-section-number">3.1</span> Q1. How do delay patterns vary across U.S. airports and states, and how are these patterns associated with geography, dominant delay types, and airport traffic volume?</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/prksyng54/airplane_delays.git/edit/main/results.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/prksyng54/airplane_delays.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -165,8 +206,45 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="q1.-how-do-delay-patterns-vary-across-u.s.-airports-and-states-and-how-are-these-patterns-associated-with-geography-dominant-delay-types-and-airport-traffic-volume" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="q1.-how-do-delay-patterns-vary-across-u.s.-airports-and-states-and-how-are-these-patterns-associated-with-geography-dominant-delay-types-and-airport-traffic-volume"><span class="header-section-number">3.1</span> Q1. How do delay patterns vary across U.S. airports and states, and how are these patterns associated with geography, dominant delay types, and airport traffic volume?</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(statebins)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Airline_Delay_Cause.csv"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24,599 × 21
+    year month carrier carrier_name   airport airport_name arr_flights arr_del15
+   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;          &lt;chr&gt;   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;
+ 1  2025     7 YV      Mesa Airlines… BWI     Baltimore, …          18         2
+ 2  2025     7 YV      Mesa Airlines… CHS     Charleston,…          48        16
+ 3  2025     7 YV      Mesa Airlines… CLE     Cleveland, …          65        10
+ 4  2025     7 YV      Mesa Airlines… CLT     Charlotte, …         134        31
+ 5  2025     7 YV      Mesa Airlines… CMH     Columbus, O…          61        12
+ 6  2025     7 YV      Mesa Airlines… COS     Colorado Sp…          31         5
+ 7  2025     7 YV      Mesa Airlines… CRP     Corpus Chri…          19         4
+ 8  2025     7 YV      Mesa Airlines… CVG     Cincinnati,…          75        14
+ 9  2025     7 YV      Mesa Airlines… DFW     Dallas/Fort…          97        23
+10  2025     7 YV      Mesa Airlines… DRO     Durango, CO…          31         1
+# ℹ 24,589 more rows
+# ℹ 13 more variables: carrier_ct &lt;dbl&gt;, weather_ct &lt;dbl&gt;, nas_ct &lt;dbl&gt;,
+#   security_ct &lt;dbl&gt;, late_aircraft_ct &lt;dbl&gt;, arr_cancelled &lt;dbl&gt;,
+#   arr_diverted &lt;dbl&gt;, arr_delay &lt;dbl&gt;, carrier_delay &lt;dbl&gt;,
+#   weather_delay &lt;dbl&gt;, nas_delay &lt;dbl&gt;, security_delay &lt;dbl&gt;,
+#   late_aircraft_delay &lt;dbl&gt;</code></pre>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -589,7 +667,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/prksyng54/airplane_delays.git/edit/main/results.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/prksyng54/airplane_delays.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/prksyng54/airplane_delays.git/edit/main/results.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/prksyng54/airplane_delays.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
