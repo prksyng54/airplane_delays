@@ -8,11 +8,11 @@ execute:
   message: false
 
 book:
-  title: "YOUR PROJECT TITLE"
+  title: "Airplane Delays"
   author:
-    - AUTHOR1 (UNI1)
-    - AUTHOR2 (UNI2)
-  repo-url: https://github.com/YOUR_GITHUB_ACCOUNT/REPO_NAME
+    - Selina Park (sp4544)
+    - Mary Nye Virginia (mn3297)
+  repo-url: https://github.com/prksyng54/airplane_delays.git
   date: today
   page-footer:
     right: |
