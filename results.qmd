@@ -12,3 +12,317 @@ library(ggplot2)
 df <- read_csv("Airline_Delay_Cause.csv")
 df
 ```
+
+```{r}
+delay_airport <- df |>
+  group_by(airport, airport_name) |>
+  summarise(
+    total_flights = sum(arr_flights, na.rm = TRUE),
+    carrier_delay = sum(carrier_delay, na.rm = TRUE),
+    weather_delay = sum(weather_delay, na.rm = TRUE),
+    nas_delay = sum(nas_delay, na.rm = TRUE),
+    security_delay = sum(security_delay, na.rm = TRUE),
+    late_aircraft_delay = sum(late_aircraft_delay, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  mutate(
+    carrier_rate = carrier_delay / total_flights,
+    weather_rate = weather_delay / total_flights,
+    nas_rate = nas_delay / total_flights,
+    security_rate = security_delay / total_flights,
+    late_aircraft_rate = late_aircraft_delay / total_flights
+  )
+
+delay_norm <- delay_airport |>
+  mutate(across(all_of(delay_cols), scale))
+
+```
+
+```{r}
+library(viridis)
+
+delay_cols <- c(
+  "carrier_rate",
+  "weather_rate",
+  "nas_rate",
+  "security_rate",
+  "late_aircraft_rate"
+)
+
+col_idx <- match(delay_cols, names(delay_norm))
+
+library(GGally)
+
+GGally::ggparcoord(
+  data = delay_norm,
+  columns = col_idx,       # numeric locations 1–5
+  groupColumn = "airport", # each airport gets a line
+  scale = "std",
+  alphaLines = 0.4
+) +
+  theme_minimal(base_size = 14) +
+  labs(
+    title = "Parallel Coordinates: Airport Delay Profiles",
+    x = "Delay Type",
+    y = "Normalized Delay Rate"
+  ) +
+  theme(legend.position = "none")
+
+```
+
+```{r}
+library(tidyverse)
+library(GGally)
+
+state_delay <- delay_airport |>
+  mutate(
+    state = sub(".*, ([A-Z]{2}):.*", "\\1", airport_name),
+    region = state.region[match(state, state.abb)]
+  ) |>
+  group_by(state, region) |>
+  summarise(
+    carrier_rate = mean(carrier_rate, na.rm = TRUE),
+    weather_rate = mean(weather_rate, na.rm = TRUE),
+    nas_rate = mean(nas_rate, na.rm = TRUE),
+    security_rate = mean(security_rate, na.rm = TRUE),
+    late_rate = mean(late_aircraft_rate, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+GGally::ggparcoord(
+  data = state_delay,
+  columns = 3:7,        # the 5 delay rate columns
+  groupColumn = "region",
+  scale = "std",        # normalize each axis
+  alphaLines = 0.6
+) +
+  scale_color_brewer(palette = "Set1") +
+  theme_minimal(base_size = 13) +
+  labs(
+    title = "Parallel Coordinate Plot of State Delay Profiles",
+    subtitle = "Lines represent states; Colors represent Census regions",
+    x = "Delay Type",
+    y = "Standardized Delay Rate",
+    color = "Region"
+  ) +
+  theme(
+    legend.position = "right",
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+```
+
+```{r}
+library(tidyverse)
+library(reshape2)
+library(viridis)
+library(ggplot2)
+
+delay_cols <- c(
+  "carrier_rate",
+  "weather_rate",
+  "nas_rate",
+  "security_rate",
+  "late_aircraft_rate"
+)
+
+corr_mat <- delay_airport |>
+  select(all_of(delay_cols)) |>
+  cor(use = "pairwise.complete.obs")
+
+corr_df <- melt(corr_mat)
+names(corr_df) <- c("DelayType1", "DelayType2", "Correlation")
+
+ggplot(corr_df, aes(x = DelayType1, y = DelayType2, fill = Correlation)) +
+  geom_tile(color = "white") +
+  scale_fill_distiller(
+  palette = "Blues", direction=1) +
+  theme_minimal(base_size = 14) +
+  labs(
+    title = "Correlation Heatmap of Airport Delay Types",
+    x = "Delay Type",
+    y = "Delay Type",
+    fill = "Correlation"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+delay_scatter_long <- delay_airport %>%
+  select(
+    airport, total_flights,
+    carrier_rate, weather_rate, nas_rate,
+    security_rate, late_aircraft_rate
+  ) %>%
+  pivot_longer(
+    cols = ends_with("_rate"),
+    names_to = "delay_type",
+    values_to = "delay_rate"
+  )
+
+ggplot(delay_scatter_long,
+       aes(x = total_flights, y = delay_rate)) +
+  geom_point(alpha = 0.5, size = 1.5, color = "blue") +
+  scale_x_log10(
+    breaks = c(100, 1000, 10000, 100000),
+    labels = c("100", "1K", "10K", "100K")
+  ) +
+  facet_wrap(~ delay_type, scales = "free_y") +
+  theme_minimal(base_size = 15) +
+  labs(
+    title = "Airport Size vs Delay Rate by Delay Type",
+    x = "Total Flights (Log Scale)",
+    y = "Delay Rate (%)"
+  )
+
+```
+
+```{r}
+delay_airport <- delay_airport |>
+  mutate(
+    state = sub(".*, ([A-Z]{2}):.*", "\\1", airport_name)
+  )
+
+
+delay_airport |> 
+  select(airport, airport_name, state) |> 
+  head(10)
+
+state_summary <- delay_airport |>
+  mutate(state = sub(".*, ([A-Z]{2}):.*", "\\1", airport_name)) |>
+  group_by(state) |>
+  summarise(
+    avg_delay_rate = mean((carrier_rate + weather_rate + nas_rate +
+                           security_rate + late_aircraft_rate) / 5, na.rm = TRUE),
+    total_flights = sum(total_flights, na.rm = TRUE)
+  )
+```
+
+```{r}
+library(statebins)
+library(RColorBrewer)
+
+
+p <- state_summary |>
+  filter(state %in% state.abb) |>
+  statebins(
+    value_col = "avg_delay_rate",
+    name = "Avg Delay Rate",
+    font_size = 3,
+    palette = "Reds"   
+  ) +
+  labs(title = "Average Airport Delay Rate by State") +
+  theme_statebins()
+
+# override with continuous reversed palette
+p + scale_fill_distiller(palette = "Reds", direction = 1)
+```
+
+```{r}
+library(ggalluvial)
+
+delay_cols <- c("carrier_rate", "weather_rate", "nas_rate",
+                "security_rate", "late_aircraft_rate")
+
+state_flow <- delay_airport %>%
+  mutate(
+    state = sub(".*, ([A-Z]{2}):.*", "\\1", airport_name),
+    region = state.region[match(state, state.abb)],
+    # get the dominant delay type correctly
+    dominant = delay_cols[max.col(select(., all_of(delay_cols)), ties.method = "first")]
+  ) %>%
+  group_by(region, dominant) %>%
+  summarise(count = n(), .groups = "drop")
+
+ggplot(state_flow,
+       aes(axis1 = region, axis2 = dominant, y = count)) +
+  geom_alluvium(aes(fill = dominant)) +
+  geom_stratum() +
+  geom_label(aes(label = after_stat(stratum)), stat = "stratum") +
+  theme_minimal() +
+  labs(
+    title = "Region-to-Dominant Delay Type Flow",
+    y = "Number of Airports"
+  )
+
+```
+
+```{r}
+library(sf)
+library(tidyverse)
+
+delay_by_state_type <- delay_airport %>%
+  mutate(state = sub(".*, ([A-Z]{2}):.*", "\\1", airport_name)) %>%
+  group_by(state) %>%
+  summarise(
+    carrier_delay = sum(carrier_delay, na.rm = TRUE),
+    weather_delay = sum(weather_delay, na.rm = TRUE),
+    nas_delay = sum(nas_delay, na.rm = TRUE),
+    security_delay = sum(security_delay, na.rm = TRUE),
+    late_aircraft_delay = sum(late_aircraft_delay, na.rm = TRUE),
+    total_flights = sum(total_flights, na.rm = TRUE)
+  ) %>%
+  mutate(
+    state_full = tolower(state.name[match(state, state.abb)]),
+    carrier_rate = carrier_delay / total_flights,
+    weather_rate = weather_delay / total_flights,
+    nas_rate = nas_delay / total_flights,
+    security_rate = security_delay / total_flights,
+    late_rate = late_aircraft_delay / total_flights
+  )
+
+```
+
+```{r}
+delay_long <- delay_by_state_type %>%
+  pivot_longer(
+    cols = ends_with("_rate"),
+    names_to = "delay_type",
+    values_to = "delay_value"
+  ) %>%
+  mutate(
+    delay_type = recode(delay_type,
+                        carrier_rate = "Carrier",
+                        weather_rate = "Weather",
+                        nas_rate = "NAS",
+                        security_rate = "Security",
+                        late_rate = "Late Aircraft")
+  )
+
+states_sf <- st_as_sf(maps::map("state", plot = FALSE, fill = TRUE))
+
+plot_data <- left_join(
+  states_sf,
+  delay_long,
+  by = c("ID" = "state_full")
+) %>%
+  mutate(
+    state_abb = toupper(state.abb[match(ID, tolower(state.name))])
+  )
+
+library(ggplot2)
+library(viridis)
+
+delay_types <- unique(plot_data$delay_type)
+plot_list <- list()
+
+for (dt in delay_types) {
+  p <- ggplot(filter(plot_data, delay_type == dt)) +
+    geom_sf(aes(fill = delay_value), color = "white", linewidth = 0.2) +
+    geom_sf_text(aes(label = state_abb), size = 3, color = "black") +
+    scale_fill_viridis_c(direction = -1) +
+    theme_void() +
+    labs(
+      title = paste(dt, "Delay Rate per Flight by State"),
+      fill = "Delay per Flight"
+    )
+
+  plot_list[[dt]] <- p
+}
+
+plot_list
+
+```
