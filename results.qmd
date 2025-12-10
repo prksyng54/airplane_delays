@@ -33,6 +33,9 @@ delay_airport <- df |>
     late_aircraft_rate = late_aircraft_delay / total_flights
   )
 
+delay_cols <- c("carrier_rate", "weather_rate", "nas_rate",
+                "security_rate", "late_aircraft_rate")
+
 delay_norm <- delay_airport |>
   mutate(across(all_of(delay_cols), scale))
 
@@ -223,9 +226,6 @@ p + scale_fill_distiller(palette = "Reds", direction = 1)
 
 ```{r}
 library(ggalluvial)
-
-delay_cols <- c("carrier_rate", "weather_rate", "nas_rate",
-                "security_rate", "late_aircraft_rate")
 
 state_flow <- delay_airport %>%
   mutate(

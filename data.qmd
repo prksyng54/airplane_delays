@@ -1,3 +1,7 @@
+---
+execute:
+  eval: false
+---  
 # Data
 
 ## Description
@@ -22,3 +26,49 @@ Key Delay Categories (each measured in both count and minutes): 
 It is important to note that the delay time and delay count metrics capture different aspects of performance; an airport could have many short delays (high count, low time) or a few very long delays (low count, high time), so both dimensions must be considered in the analysis. Additionally, because airports and airlines vary significantly in size, performance comparisons will need to be normalised by the total number of incoming flights to create meaningful per-flight delay rates. 
 
 ## Missing value analysis
+
+```{r}
+#| eval: false
+df <- read_csv("Airline_Delay_Cause.csv")
+colSums(is.na(df)) |> 
+  sort(decreasing = TRUE)
+```
+
+```{r}
+library(tidyverse)
+
+missing_summary <- df %>%
+  summarise(across(everything(), ~ sum(is.na(.)))) %>%
+  pivot_longer(everything(),
+               names_to = "variable",
+               values_to = "missing")
+
+ggplot(missing_summary, aes(x = reorder(variable, missing), y = missing)) +
+  geom_col(fill = "red") +
+  coord_flip() +
+  theme_minimal() +
+  labs(
+    title = "Missing Values per Variable",
+    x = "Variable",
+    y = "Number of Missing Values"
+  )
+
+```
+
+```{r}
+missing_percent <- df %>%
+  summarise(across(everything(), ~ mean(is.na(.))*100)) %>%
+  pivot_longer(everything(),
+               names_to = "variable",
+               values_to = "percent_missing")
+
+ggplot(missing_percent, aes(x = reorder(variable, percent_missing), y = percent_missing)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  theme_minimal() +
+  labs(
+    title = "Percent Missing per Variable",
+    y = "% Missing"
+  )
+
+```
