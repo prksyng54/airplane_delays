@@ -90,7 +90,7 @@ GGally::ggparcoord(
   )
 ```
 
--   Western states tend to have lower rates cross all delay types, and security delay rate is the smallest, which is shown as distint cluster around 0.
+-   Western states tend to have lower rates cross all delay types, and security delay rate is the smallest, which is shown as distinct cluster around 0.
 
 ```{r}
 library(tidyverse)
@@ -164,12 +164,11 @@ ggplot(delay_scatter_long,
 
 -   Airport size does not strongly predict overall delay rate. The delay rate varies more in the airports with smaller airport size (around 1k), often including extreme outliers.
 
-```{r}
+```{r, echo=FALSE, results='hide'}
 delay_airport <- delay_airport |>
   mutate(
     state = sub(".*, ([A-Z]{2}):.*", "\\1", airport_name)
   )
-
 
 delay_airport |> 
   select(airport, airport_name, state) |> 
@@ -188,15 +187,15 @@ state_summary <- delay_airport |>
 ```{r}
 library(ggalluvial)
 
-state_flow <- delay_airport %>%
+state_flow <- delay_airport |>
   mutate(
     state = sub(".*, ([A-Z]{2}):.*", "\\1", airport_name),
     region = state.region[match(state, state.abb)],
     dominant = delay_cols[max.col(select(., all_of(delay_cols)), 
                                   ties.method = "first")]
-  ) %>%
-  drop_na(region) %>%       # <-- DROP US TERRITORIES / NA REGIONS
-  group_by(region, dominant) %>%
+  ) |>
+  drop_na(region) |>      
+  group_by(region, dominant) |>
   summarise(count = n(), .groups = "drop")
 
 ggplot(state_flow,
@@ -268,9 +267,9 @@ plot_data <- left_join(
 ) |>
   mutate(
     state_abb = toupper(state.abb[match(ID, tolower(state.name))]),
-    region = state.region[match(state_abb, state.abb)]  # <- add this
+    region = state.region[match(state_abb, state.abb)]  
   ) |>
-  filter(!is.na(region))  # <- drop DC / anything without a region
+  filter(!is.na(region)) 
 
 delay_types <- plot_data |>
   dplyr::filter(!is.na(delay_type)) |>
