@@ -37,12 +37,15 @@ It is important to note that the delay time and delay count metrics capture diff
 
 ```{r}
 #| eval: false
+library(tidyr)
+
 df <- read_csv("Airline_Delay_Cause.csv")
 colSums(is.na(df)) |> 
   sort(decreasing = TRUE)
 ```
 
 ```{r}
+#| eval: false
 missing_percent <- df |>
   summarise(across(everything(), ~ mean(is.na(.))*100)) |>
   pivot_longer(everything(),
