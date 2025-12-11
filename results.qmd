@@ -190,11 +190,16 @@ library(ggalluvial)
 state_flow <- delay_airport |>
   mutate(
     state = sub(".*, ([A-Z]{2}):.*", "\\1", airport_name),
-    region = state.region[match(state, state.abb)],
-    dominant = delay_cols[max.col(select(., all_of(delay_cols)), 
-                                  ties.method = "first")]
+    region = state.region[match(state, state.abb)]
   ) |>
-  drop_na(region) |>      
+  rowwise() |>
+  mutate(
+    dominant = delay_cols[
+      which.max(c_across(all_of(delay_cols)))
+    ]
+  ) |>
+  ungroup() |>
+  tidyr::drop_na(region) |>
   group_by(region, dominant) |>
   summarise(count = n(), .groups = "drop")
 
