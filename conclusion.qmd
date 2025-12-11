@@ -1,1 +1,13 @@
 # Conclusion
+
+## Q1 Insights 
+
+Delay patterns across U.S. airports vary by geography, dominant delay type, and airport traffic volume. Late aircraft delays appeared the most in airports, whereas security delays are rare and seemed unrelated to other delay sources. There is no significant relationship between airport size and number of delays, in other words, larger airports do not necessarily have higher delay rates. However, smaller airports had greater variability and more extreme outliers. Western states generally show lower delay rates across all categories, while the Northeast and parts of the Midwest experience consistently higher delays for late-aircraft, weather, and NAS delays. It was interesting that West Virgina had extremely high delay rates for most of type, which is represented as an outlier and worth further investigation. Overall, geographic region and delay type contribute more to explaining delay differences than airport traffic volume alone.
+
+## Q2 Insights 
+
+Late aircraft delays are the aviation system’s greatest operational vulnerability, combining high frequency with substantial duration to account for 40% of all delay minutes. Weather delays only account for 4% of all total delays, but when they do occur, they result in the highest average time per delay at an hour and 20 minutes. The strong seasonal increase during peak travel periods indicates that this problem intensifies under demand pressure rather than being constant throughout the year. Additionally, this pattern is prevalent across all airports regardless of hub size.
+
+I learned that it's crucial to do a thorough analysis of the data before committing project direction. Our original approach with gtrends worked fine for simple plots, but when we tried to do more analytical comparisons and regional analyses, the data just wasn’t sufficient. I also learned that it is important to understand what questions you want to be asking with each of your plots before you actually start coding. There are a lot of visualizations that can look good, but don’t really say anything meaningful or don’t make sense for the data we’re working with. I found that taking a step back to write out specific subquestions for each main research question and matching each plot to a question it could actually answer was the most helpful. 
+
+Extending this data back a few years and comparing  patterns before and after COVID could reveal whether the pandemic had any lasting impact on the aviation system. Another interesting direction would be to incorporate data about airport operational practices (differences in how airports are managed by city/municipal vs. port vs. independent authorities) to see if management approaches relate to delay patterns. 

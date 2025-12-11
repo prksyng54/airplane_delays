@@ -2,9 +2,9 @@
 
 ## Description
 
-This data comes from the United States Department of Transportation’s Bureau of Transportation Statistics and contains information on flight delays and cancellations for domestic flights in the first six months of 2025. In that time period, there were a total of 11,404 delayed operations by 21 airlines at 370 airports.
+This data comes from the United States Department of Transportation’s Bureau of Transportation Statistics and contains information on flight delays and cancellations for domestic flights from July 2024 to July 2025. In that time period, there were a total of 11,404 delayed operations by 21 airlines at 370 airports.
 
-Each observation represents aggregated monthly statistics for a specific airport-airline combination (i.e. HOU-Southwest-January or IAD-Delta-May). There are 21 variables representing flight volumes, delay counts, delay durations, cancellations and diversions. A flight is considered delayed if it arrives more than 15 minutes after its scheduled time.
+Each observation represents aggregated monthly statistics for a specific airport-airline combination (i.e. HOU-Southwest-January or IAD-Delta-May). There are 21 variables representing flight volumes, delay counts, delay durations, cancellations and diversions. A flight is considered delayed if it arrives more than 15 minutes after its scheduled time. We added the DOT’s hub classifications (large hub, medium hub, small hub, or non-hub) to the data. 
 
 Key Delay Categories (each measured in both count and minutes): 
 
@@ -20,6 +20,18 @@ Key Delay Categories (each measured in both count and minutes): 
 
 \
 It is important to note that the delay time and delay count metrics capture different aspects of performance; an airport could have many short delays (high count, low time) or a few very long delays (low count, high time), so both dimensions must be considered in the analysis. Additionally, because airports and airlines vary significantly in size, performance comparisons will need to be normalised by the total number of incoming flights to create meaningful per-flight delay rates. 
+
+## Sources
+
+-   Data Source: <https://www.transtats.bts.gov/ot_delay/ot_delaycause1.asp?qv52ynB=qn6n&20=E>
+
+-   Source for hub classification: <https://www.transportation.gov/sites/dot.gov/files/docs/97%20Hub%20Classification%20Stats.pdf>
+
+-   Sources for busiest travel days
+
+<https://www.afar.com/magazine/tsa-just-had-its-busiest-week-ever> 
+
+<https://www.clearme.com/blog/busiest-travel-day-of-the-year>
 
 ## Missing value analysis
 
