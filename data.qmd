@@ -43,8 +43,8 @@ colSums(is.na(df)) |>
 ```
 
 ```{r}
-missing_percent <- df %>%
-  summarise(across(everything(), ~ mean(is.na(.))*100)) %>%
+missing_percent <- df |>
+  summarise(across(everything(), ~ mean(is.na(.))*100)) |>
   pivot_longer(everything(),
                names_to = "variable",
                values_to = "percent_missing")
