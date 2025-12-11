@@ -182,12 +182,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#how-do-delay-patterns-vary-across-u.s.-airports-and-states-and-how-are-these-patterns-associated-with-geography-dominant-delay-types-and-airport-traffic-volume" id="toc-how-do-delay-patterns-vary-across-u.s.-airports-and-states-and-how-are-these-patterns-associated-with-geography-dominant-delay-types-and-airport-traffic-volume" class="nav-link active" data-scroll-target="#how-do-delay-patterns-vary-across-u.s.-airports-and-states-and-how-are-these-patterns-associated-with-geography-dominant-delay-types-and-airport-traffic-volume"><span class="header-section-number">3.1</span> How do delay patterns vary across U.S. airports and states, and how are these patterns associated with geography, dominant delay types, and airport traffic volume?</a></li>
   <li><a href="#which-delay-type-is-most-costly-to-the-aviation-system-and-what-are-its-underlying-patterns-and-impacts" id="toc-which-delay-type-is-most-costly-to-the-aviation-system-and-what-are-its-underlying-patterns-and-impacts" class="nav-link" data-scroll-target="#which-delay-type-is-most-costly-to-the-aviation-system-and-what-are-its-underlying-patterns-and-impacts"><span class="header-section-number">3.2</span> Which delay type is most costly to the aviation system, and what are its underlying patterns and impacts?</a></li>
-  <li><a href="#which-delay-types-are-most-prevalentmost-severe" id="toc-which-delay-types-are-most-prevalentmost-severe" class="nav-link" data-scroll-target="#which-delay-types-are-most-prevalentmost-severe"><span class="header-section-number">3.3</span> Which delay types are most prevalent/most severe?</a></li>
-  <li><a href="#how-does-each-delay-rate-vary-over-time" id="toc-how-does-each-delay-rate-vary-over-time" class="nav-link" data-scroll-target="#how-does-each-delay-rate-vary-over-time"><span class="header-section-number">3.4</span> How does each delay rate vary over time?</a></li>
-  <li><a href="#is-there-a-relationship-between-hub-type-and-late-aircraft-delay-rates" id="toc-is-there-a-relationship-between-hub-type-and-late-aircraft-delay-rates" class="nav-link" data-scroll-target="#is-there-a-relationship-between-hub-type-and-late-aircraft-delay-rates"><span class="header-section-number">3.5</span> Is there a relationship between hub type and late aircraft delay rates?</a></li>
-  <li><a href="#how-do-different-delay-types-cluster-at-airports" id="toc-how-do-different-delay-types-cluster-at-airports" class="nav-link" data-scroll-target="#how-do-different-delay-types-cluster-at-airports"><span class="header-section-number">4</span> How do different delay types cluster at airports?</a>
+  <li><a href="#which-delay-types-are-most-prevalentmost-severe" id="toc-which-delay-types-are-most-prevalentmost-severe" class="nav-link" data-scroll-target="#which-delay-types-are-most-prevalentmost-severe"><span class="header-section-number">3.3</span> Which delay types are most prevalent/most severe?</a>
   <ul class="collapse">
-  <li><a href="#which-airports-experience-the-highest-late-aircraft-delays" id="toc-which-airports-experience-the-highest-late-aircraft-delays" class="nav-link" data-scroll-target="#which-airports-experience-the-highest-late-aircraft-delays"><span class="header-section-number">4.1</span> Which airports experience the highest late aircraft delays?</a></li>
+  <li><a href="#how-does-each-delay-rate-vary-over-time" id="toc-how-does-each-delay-rate-vary-over-time" class="nav-link" data-scroll-target="#how-does-each-delay-rate-vary-over-time"><span class="header-section-number">3.3.1</span> How does each delay rate vary over time?</a></li>
+  <li><a href="#is-there-a-relationship-between-hub-type-and-late-aircraft-delay-rates" id="toc-is-there-a-relationship-between-hub-type-and-late-aircraft-delay-rates" class="nav-link" data-scroll-target="#is-there-a-relationship-between-hub-type-and-late-aircraft-delay-rates"><span class="header-section-number">3.3.2</span> Is there a relationship between hub type and late aircraft delay rates?</a></li>
+  <li><a href="#how-do-different-delay-types-cluster-at-airports" id="toc-how-do-different-delay-types-cluster-at-airports" class="nav-link" data-scroll-target="#how-do-different-delay-types-cluster-at-airports"><span class="header-section-number">3.3.3</span> How do different delay types cluster at airports?</a></li>
+  <li><a href="#which-airports-experience-the-highest-late-aircraft-delays" id="toc-which-airports-experience-the-highest-late-aircraft-delays" class="nav-link" data-scroll-target="#which-airports-experience-the-highest-late-aircraft-delays"><span class="header-section-number">3.3.4</span> Which airports experience the highest late aircraft delays?</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/prksyng54/airplane_delays.git/edit/main/results.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/prksyng54/airplane_delays.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -278,36 +278,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">state =</span> <span class="fu">sub</span>(<span class="st">".*, ([A-Z]{2}):.*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, airport_name),</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">region =</span> state.region[<span class="fu">match</span>(state, state.abb)]</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state, region) <span class="sc">|&gt;</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">carrier_rate =</span> <span class="fu">mean</span>(carrier_rate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">weather_rate =</span> <span class="fu">mean</span>(weather_rate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">nas_rate =</span> <span class="fu">mean</span>(nas_rate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">security_rate =</span> <span class="fu">mean</span>(security_rate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">late_rate =</span> <span class="fu">mean</span>(late_aircraft_rate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>GGally<span class="sc">::</span><span class="fu">ggparcoord</span>(</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> state_delay,</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">columns =</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">7</span>,        <span class="co"># the 5 delay rate columns</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">groupColumn =</span> <span class="st">"region"</span>,</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">scale =</span> <span class="st">"std"</span>,        <span class="co"># normalize each axis</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">alphaLines =</span> <span class="fl">0.6</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>) <span class="sc">+</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>) <span class="sc">+</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Parallel Coordinate Plot of State Delay Profiles"</span>,</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Lines represent states; Colors represent Census regions"</span>,</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Delay Type"</span>,</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Standardized Delay Rate"</span>,</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Region"</span></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)</span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(region) <span class="sc">|&gt;</span>      <span class="co"># ← REMOVE NA regions</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state, region) <span class="sc">|&gt;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">carrier_rate =</span> <span class="fu">mean</span>(carrier_rate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">weather_rate =</span> <span class="fu">mean</span>(weather_rate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">nas_rate =</span> <span class="fu">mean</span>(nas_rate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">security_rate =</span> <span class="fu">mean</span>(security_rate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">late_rate =</span> <span class="fu">mean</span>(late_aircraft_rate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>GGally<span class="sc">::</span><span class="fu">ggparcoord</span>(</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> state_delay,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">columns =</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">7</span>,        </span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">groupColumn =</span> <span class="st">"region"</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">scale =</span> <span class="st">"std"</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">alphaLines =</span> <span class="fl">0.6</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>) <span class="sc">+</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>) <span class="sc">+</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Parallel Coordinate Plot of State Delay Profiles"</span>,</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Lines represent states; Colors represent Census regions"</span>,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Delay Type"</span>,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Standardized Delay Rate"</span>,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Region"</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -733,9 +734,8 @@ $`Late Aircraft`</code></pre>
 <p>Weather delays are the most severe (an almost 2 hour average), yet the rarest (.9 per 100 flights), contributing to only ~ 6% of total system delay minutes. Weather delays, while severe, are not the main operation concern and often come from unavoidable external factors rather than inefficiency in the system.</p>
 <p>Security delays are almost completely negligible representing less than .2% of total delay minutes.</p>
 <p>Delay counts contains decimal values, likely representing when delays have multiple contributing causes.</p>
-</section>
-<section id="how-does-each-delay-rate-vary-over-time" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="how-does-each-delay-rate-vary-over-time"><span class="header-section-number">3.4</span> How does each delay rate vary over time?</h2>
+<section id="how-does-each-delay-rate-vary-over-time" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="how-does-each-delay-rate-vary-over-time"><span class="header-section-number">3.3.1</span> How does each delay rate vary over time?</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -804,8 +804,8 @@ $`Late Aircraft`</code></pre>
 <p>According to the TSA, four of 2024’s top ten travel days occurred in July, and June 22, 2025 marked the second highest single-day volume ever with 3.097 million passengers. Those dates align with peaks in the delay spikes, suggesting that increased demand during high-volume periods drives higher NAS, carrier, and Late Aircraft delay rates. The December peak most likely represents with increased holiday travel.</p>
 <p>Surprisingly, weather delays remain consistently low throughout the year, even with varying weather patterns per season. Security delays remain negligible.</p>
 </section>
-<section id="is-there-a-relationship-between-hub-type-and-late-aircraft-delay-rates" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="is-there-a-relationship-between-hub-type-and-late-aircraft-delay-rates"><span class="header-section-number">3.5</span> Is there a relationship between hub type and late aircraft delay rates?</h2>
+<section id="is-there-a-relationship-between-hub-type-and-late-aircraft-delay-rates" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="is-there-a-relationship-between-hub-type-and-late-aircraft-delay-rates"><span class="header-section-number">3.3.2</span> Is there a relationship between hub type and late aircraft delay rates?</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -876,8 +876,8 @@ $`Late Aircraft`</code></pre>
 </div>
 <p>Delay rates show minimal systemic variation by hub classifications, suggesting that these delays are a system-wide issue rather than hub specific. The only exception is NAS delays, which are slightly elevated at large hubs, mostly likely due to airspace congestion.</p>
 </section>
-<section id="how-do-different-delay-types-cluster-at-airports" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> How do different delay types cluster at airports?</h1>
+<section id="how-do-different-delay-types-cluster-at-airports" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="how-do-different-delay-types-cluster-at-airports"><span class="header-section-number">3.3.3</span> How do different delay types cluster at airports?</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -958,8 +958,9 @@ $`Late Aircraft`</code></pre>
 </div>
 <p>The PCA reveals two distinct delay profiles. NAS, late aircraft, and security delays are strongly correlated and tend to occur together. NAS, late aircraft, and security delays relate towa systemic congestion and bottlenecks where higher flight volume can lend itself to flight delays and higher passenger volume to security delays. This makes sense as the larger hub airports are concentrated on the negative PC1 side. Non-hub airports are more dispersed throughout the plot.</p>
 <p>Weather and carrier delays also tend to occur together, possibly representing airports where external conditions and airline-specific issues are the bigger problems. The similar arrow magnitudes across delay types indicate that multiple factors contribute to differentiating delay patterns, though carrier and weather delays align most strongly with PC1.</p>
-<section id="which-airports-experience-the-highest-late-aircraft-delays" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="which-airports-experience-the-highest-late-aircraft-delays"><span class="header-section-number">4.1</span> Which airports experience the highest late aircraft delays?</h2>
+</section>
+<section id="which-airports-experience-the-highest-late-aircraft-delays" class="level3" data-number="3.3.4">
+<h3 data-number="3.3.4" class="anchored" data-anchor-id="which-airports-experience-the-highest-late-aircraft-delays"><span class="header-section-number">3.3.4</span> Which airports experience the highest late aircraft delays?</h3>
 <p>Because late aircraft delays are the highest concern and not neccesarily a problem separated by hub type, we created a dot plot of the top 50 airports with the highest late aircraft delay rates. Security delays are not included because they are so few.</p>
 <div class="cell">
 <details class="code-fold">
