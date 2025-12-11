@@ -39,9 +39,6 @@ delay_cols <- c("carrier_rate", "weather_rate", "nas_rate",
 delay_norm <- delay_airport |>
   mutate(across(all_of(delay_cols), scale))
 
-```
-
-```{r}
 library(viridis)
 
 delay_cols <- c(
@@ -51,26 +48,6 @@ delay_cols <- c(
   "security_rate",
   "late_aircraft_rate"
 )
-
-col_idx <- match(delay_cols, names(delay_norm))
-
-library(GGally)
-
-GGally::ggparcoord(
-  data = delay_norm,
-  columns = col_idx,       # numeric locations 1–5
-  groupColumn = "airport", # each airport gets a line
-  scale = "std",
-  alphaLines = 0.4
-) +
-  theme_minimal(base_size = 14) +
-  labs(
-    title = "Parallel Coordinates: Airport Delay Profiles",
-    x = "Delay Type",
-    y = "Normalized Delay Rate"
-  ) +
-  theme(legend.position = "none")
-
 ```
 
 ```{r}
@@ -114,6 +91,8 @@ GGally::ggparcoord(
   )
 ```
 
+-   Western states tend to have lower rates cross all delay types, and security delay rate is the smallest, which is shown as distint cluster around 0.
+
 ```{r}
 library(tidyverse)
 library(reshape2)
@@ -149,17 +128,19 @@ ggplot(corr_df, aes(x = DelayType1, y = DelayType2, fill = Correlation)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+-   Security delays shows almost no correlations with other delay type. Weather and carrier rate, and late aircraft and NAS rate are most correlated.
+
 ```{r}
 library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-delay_scatter_long <- delay_airport %>%
+delay_scatter_long <- delay_airport |>
   select(
     airport, total_flights,
     carrier_rate, weather_rate, nas_rate,
     security_rate, late_aircraft_rate
-  ) %>%
+  ) |>
   pivot_longer(
     cols = ends_with("_rate"),
     names_to = "delay_type",
@@ -180,8 +161,9 @@ ggplot(delay_scatter_long,
     x = "Total Flights (Log Scale)",
     y = "Delay Rate (%)"
   )
-
 ```
+
+-   Airport size does not strongly predict overall delay rate. The delay rate varies more in the airports with smaller airport size (around 1k), often including extreme outliers.
 
 ```{r}
 delay_airport <- delay_airport |>
@@ -205,35 +187,16 @@ state_summary <- delay_airport |>
 ```
 
 ```{r}
-library(statebins)
-library(RColorBrewer)
-
-
-p <- state_summary |>
-  filter(state %in% state.abb) |>
-  statebins(
-    value_col = "avg_delay_rate",
-    name = "Avg Delay Rate",
-    font_size = 3,
-    palette = "Reds"   
-  ) +
-  labs(title = "Average Airport Delay Rate by State") +
-  theme_statebins()
-
-# override with continuous reversed palette
-p + scale_fill_distiller(palette = "Reds", direction = 1)
-```
-
-```{r}
 library(ggalluvial)
 
 state_flow <- delay_airport %>%
   mutate(
     state = sub(".*, ([A-Z]{2}):.*", "\\1", airport_name),
     region = state.region[match(state, state.abb)],
-    # get the dominant delay type correctly
-    dominant = delay_cols[max.col(select(., all_of(delay_cols)), ties.method = "first")]
+    dominant = delay_cols[max.col(select(., all_of(delay_cols)), 
+                                  ties.method = "first")]
   ) %>%
+  drop_na(region) %>%       # <-- DROP US TERRITORIES / NA REGIONS
   group_by(region, dominant) %>%
   summarise(count = n(), .groups = "drop")
 
@@ -250,13 +213,15 @@ ggplot(state_flow,
 
 ```
 
+-   Late aircraft delays are more dominant type for most airports nationwide. Carrier delays dominate many airports in the South and West.
+
 ```{r}
 library(sf)
 library(tidyverse)
 
-delay_by_state_type <- delay_airport %>%
-  mutate(state = sub(".*, ([A-Z]{2}):.*", "\\1", airport_name)) %>%
-  group_by(state) %>%
+delay_by_state_type <- delay_airport |>
+  mutate(state = sub(".*, ([A-Z]{2}):.*", "\\1", airport_name)) |>
+  group_by(state) |>
   summarise(
     carrier_delay = sum(carrier_delay, na.rm = TRUE),
     weather_delay = sum(weather_delay, na.rm = TRUE),
@@ -264,7 +229,7 @@ delay_by_state_type <- delay_airport %>%
     security_delay = sum(security_delay, na.rm = TRUE),
     late_aircraft_delay = sum(late_aircraft_delay, na.rm = TRUE),
     total_flights = sum(total_flights, na.rm = TRUE)
-  ) %>%
+  ) |>
   mutate(
     state_full = tolower(state.name[match(state, state.abb)]),
     carrier_rate = carrier_delay / total_flights,
@@ -277,12 +242,15 @@ delay_by_state_type <- delay_airport %>%
 ```
 
 ```{r}
-delay_long <- delay_by_state_type %>%
+library(ggplot2)
+library(viridis)
+
+delay_long <- delay_by_state_type |>
   pivot_longer(
     cols = ends_with("_rate"),
     names_to = "delay_type",
     values_to = "delay_value"
-  ) %>%
+  ) |>
   mutate(
     delay_type = recode(delay_type,
                         carrier_rate = "Carrier",
@@ -298,15 +266,18 @@ plot_data <- left_join(
   states_sf,
   delay_long,
   by = c("ID" = "state_full")
-) %>%
+) |>
   mutate(
-    state_abb = toupper(state.abb[match(ID, tolower(state.name))])
-  )
+    state_abb = toupper(state.abb[match(ID, tolower(state.name))]),
+    region = state.region[match(state_abb, state.abb)]  # <- add this
+  ) |>
+  filter(!is.na(region))  # <- drop DC / anything without a region
 
-library(ggplot2)
-library(viridis)
+delay_types <- plot_data |>
+  dplyr::filter(!is.na(delay_type)) |>
+  dplyr::pull(delay_type) |>
+  unique()
 
-delay_types <- unique(plot_data$delay_type)
 plot_list <- list()
 
 for (dt in delay_types) {
@@ -326,3 +297,23 @@ for (dt in delay_types) {
 plot_list
 
 ```
+
+-   Carrier
+
+    -   There are unusual high delays in West Virginia, and parts of Mid-Atlantic states. Most of other states have moderate and consistent delays.
+
+-   Weather
+
+    -   The delay rates are higher in Midwest and Mountain states. Again, West Virginia has the most extreme delay rate, which aligns with previous delay type.
+
+-   NAS delays
+
+    -   Overall delays are relatively low. Colorado has relatively high NAS delays, and New Jersey stands out as an outline with very high delay rate.
+
+-   Security
+
+    -   Security delays are extremely rare in the nation, and again, West Virginia has the highest, extreme value compared to the rest of the states.
+
+-   Late aircraft delays
+
+    -   Delays are higher in Northeast and part of Midwest (Pennsylvania, West Virginia), while most Western and Southern states have low delay rates.
