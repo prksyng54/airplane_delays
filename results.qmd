@@ -164,7 +164,7 @@ ggplot(delay_scatter_long,
   )
 ```
 
--   Airport size does not strongly predict overall delay rate. The delay rate varies more in the airports with smaller airport size (around 1k), often including extreme outliers.
+-   Airport size (determined by total flights number) does not strongly predict overall delay rate. The delay rate varies more in smaller airport (around 1k total flights), often including extreme outliers.
 
 ```{r, echo=FALSE, results='hide'}
 delay_airport <- delay_airport |>
