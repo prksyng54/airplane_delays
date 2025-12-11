@@ -1,7 +1,8 @@
 ---
 execute:
   eval: false
----  
+---
+
 # Data
 
 ## Description
@@ -35,27 +36,6 @@ colSums(is.na(df)) |>
 ```
 
 ```{r}
-library(tidyverse)
-
-missing_summary <- df %>%
-  summarise(across(everything(), ~ sum(is.na(.)))) %>%
-  pivot_longer(everything(),
-               names_to = "variable",
-               values_to = "missing")
-
-ggplot(missing_summary, aes(x = reorder(variable, missing), y = missing)) +
-  geom_col(fill = "red") +
-  coord_flip() +
-  theme_minimal() +
-  labs(
-    title = "Missing Values per Variable",
-    x = "Variable",
-    y = "Number of Missing Values"
-  )
-
-```
-
-```{r}
 missing_percent <- df %>%
   summarise(across(everything(), ~ mean(is.na(.))*100)) %>%
   pivot_longer(everything(),
@@ -63,7 +43,7 @@ missing_percent <- df %>%
                values_to = "percent_missing")
 
 ggplot(missing_percent, aes(x = reorder(variable, percent_missing), y = percent_missing)) +
-  geom_col(fill = "steelblue") +
+  geom_col(fill = "blue") +
   coord_flip() +
   theme_minimal() +
   labs(
