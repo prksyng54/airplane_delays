@@ -92,7 +92,7 @@ GGally::ggparcoord(
 
 ```
 
--   Western states tend to have lower rates cross all delay types, and security delay rate is the smallest, which is shown as distinct cluster around 0.
+Western states tend to have lower rates cross all delay types, and security delay rate is the smallest, which is shown as distinct cluster around 0.
 
 ```{r}
 library(tidyverse)
@@ -129,7 +129,7 @@ ggplot(corr_df, aes(x = DelayType1, y = DelayType2, fill = Correlation)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
--   Security delays shows almost no correlations with other delay type. Weather and carrier rate, and late aircraft and NAS rate are most correlated.
+Security delays shows almost no correlations with other delay type. Weather and carrier rate, and late aircraft and NAS rate are most correlated.
 
 ```{r}
 library(dplyr)
@@ -164,7 +164,7 @@ ggplot(delay_scatter_long,
   )
 ```
 
--   Airport size (determined by total flights number) does not strongly predict overall delay rate. The delay rate varies more in smaller airport (around 1k total flights), often including extreme outliers.
+Airport size (determined by total flights number) does not strongly predict overall delay rate. The delay rate varies more in smaller airport (around 1k total flights), often including extreme outliers.
 
 ```{r, echo=FALSE, results='hide'}
 delay_airport <- delay_airport |>
@@ -214,11 +214,12 @@ ggplot(state_flow,
   labs(
     title = "Region-to-Dominant Delay Type Flow",
     y = "Number of Airports"
-  )
-
+  ) +
+  theme(axis.ticks.x = element_blank(),
+          axis.text.x = element_blank())
 ```
 
--   Late aircraft delays are more dominant type for most airports nationwide. Carrier delays dominate many airports in the South and West.
+Late aircraft delays are more dominant type for most airports nationwide. Carrier delays dominate many airports in the South and West.
 
 ```{r}
 library(sf)
@@ -373,7 +374,7 @@ impact_prev_df <- tibble(
 
 ```
 
-## Which delay types are most prevalent/most severe?
+### Which delay types are most prevalent/most severe?
 
 ```{r}
 #| fig.width: 8
