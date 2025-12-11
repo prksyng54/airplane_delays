@@ -52,3 +52,5 @@ ggplot(missing_percent, aes(x = reorder(variable, percent_missing), y = percent_
   )
 
 ```
+
+The missing data rate is extremely small; the highest missing varaible rate of all column is around 0.05%. Overall, this dataset contains a negligible amount of missing data, so we are not taking any further process to handle missing data.

@@ -1,6 +1,6 @@
 # Results
 
-## Q1. How do delay patterns vary across U.S. airports and states, and how are these patterns associated with geography, dominant delay types, and airport traffic volume?
+## How do delay patterns vary across U.S. airports and states, and how are these patterns associated with geography, dominant delay types, and airport traffic volume?
 
 ```{r}
 library(tidyverse)
