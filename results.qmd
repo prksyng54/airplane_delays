@@ -10,7 +10,6 @@ library(statebins)
 library(ggplot2)
 
 df <- read_csv("Airline_Delay_Cause.csv")
-df
 ```
 
 ```{r}
