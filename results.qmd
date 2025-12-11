@@ -58,6 +58,7 @@ state_delay <- delay_airport |>
     state = sub(".*, ([A-Z]{2}):.*", "\\1", airport_name),
     region = state.region[match(state, state.abb)]
   ) |>
+  drop_na(region) |>      # ← REMOVE NA regions
   group_by(state, region) |>
   summarise(
     carrier_rate = mean(carrier_rate, na.rm = TRUE),
@@ -70,9 +71,9 @@ state_delay <- delay_airport |>
 
 GGally::ggparcoord(
   data = state_delay,
-  columns = 3:7,        # the 5 delay rate columns
+  columns = 3:7,        
   groupColumn = "region",
-  scale = "std",        # normalize each axis
+  scale = "std",
   alphaLines = 0.6
 ) +
   scale_color_brewer(palette = "Set1") +
@@ -88,6 +89,7 @@ GGally::ggparcoord(
     legend.position = "right",
     axis.text.x = element_text(angle = 45, hjust = 1)
   )
+
 ```
 
 -   Western states tend to have lower rates cross all delay types, and security delay rate is the smallest, which is shown as distinct cluster around 0.
@@ -433,7 +435,7 @@ Security delays are almost completely negligible representing less than .2% of t
 
 Delay counts contains decimal values, likely representing when delays have multiple contributing causes.
 
-## How does each delay rate vary over time?
+### How does each delay rate vary over time?
 
 ```{r}
 temporal_trends <- df |>
@@ -496,7 +498,7 @@ According to the TSA, four of 2024's top ten travel days occurred in July, and J
 
 Surprisingly, weather delays remain consistently low throughout the year, even with varying weather patterns per season. Security delays remain negligible.
 
-## Is there a relationship between hub type and late aircraft delay rates?
+### Is there a relationship between hub type and late aircraft delay rates?
 
 ```{r}
 #| fig.width: 6
@@ -563,7 +565,7 @@ ggplot(airport_delay_long,
 
 Delay rates show minimal systemic variation by hub classifications, suggesting that these delays are a system-wide issue rather than hub specific. The only exception is NAS delays, which are slightly elevated at large hubs, mostly likely due to airspace congestion.
 
-# How do different delay types cluster at airports?
+### How do different delay types cluster at airports?
 
 ```{r}
 pca_matrix <- airport_delay_rates |>
@@ -639,7 +641,7 @@ The PCA reveals two distinct delay profiles. NAS, late aircraft, and security de
 
 Weather and carrier delays also tend to occur together, possibly representing airports where external conditions and airline-specific issues are the bigger problems. The similar arrow magnitudes across delay types indicate that multiple factors contribute to differentiating delay patterns, though carrier and weather delays align most strongly with PC1.
 
-## Which airports experience the highest late aircraft delays?
+### Which airports experience the highest late aircraft delays?
 
 Because late aircraft delays are the highest concern and not neccesarily a problem separated by hub type, we created a dot plot of the top 50 airports with the highest late aircraft delay rates. Security delays are not included because they are so few.
 
